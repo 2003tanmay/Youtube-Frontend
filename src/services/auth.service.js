@@ -12,6 +12,8 @@ const loginAuth = async (userData, dispatch) => {
     
     // Store user detail in redux store
     dispatch(login(user));
+
+    return true
   } catch (error) {
     throw error;
   }
@@ -30,9 +32,27 @@ const logoutAuth = async (dispatch) => {
   }
 };
 
+const getUserOnLoad = async (dispatch) => {
+  try{
+    const response = await axios.get(`${conf.appBackendBaseUrl}/users/current-user`, {
+      withCredentials: true
+    });
+    const { data } = response.data;
+    const { user } = data;
+    
+    // Store user detail in redux store
+    dispatch(login(user));
+
+    return user;
+  }catch(error){
+    throw error;
+  }
+}
+
 const authService = {
   loginAuth,
-  logoutAuth
+  logoutAuth,
+  getUserOnLoad
 };
 
 export default authService;
