@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import authService from '../services/auth.service.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
+  // const authStatus = useSelector(state => state.user.isLoggedIn)
+
+  // useEffect(() => {
+  //   authService.getUserOnLoad(dispatch);
+  //   if (authStatus){
+  //     navigate('/')
+  //   }
+  // }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,6 +26,7 @@ const LoginForm = () => {
     try {
       await authService.loginAuth(formData, dispatch);
       setMsg("Success Login");
+      navigate("/")
     } catch (error) {
       console.error('Login error:', error);
     }
